@@ -1,14 +1,36 @@
 import { ScrollView, Text, TextInput, View, StyleSheet } from "react-native";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Colors } from "../../constants/colors";
 import ImagePicker from "./ImagePicker";
 import LocationPicker from "./LocationPicker";
+import Button from "../UI/Button";
+import { Place } from "../../models/place";
 
-const PlaceForm = () => {
+const PlaceForm = ({ onCreatePlace }) => {
   const [title, setTitle] = useState("");
+  const [image, setImage] = useState();
+  const [location, setLocation] = useState();
 
   const changeTitleHandler = (text) => {
     setTitle(text);
+  };
+
+  const takeImageHandler = (imageUri) => {
+    setImage(imageUri);
+  }
+
+  // use callback to prevent unnecessary re-renders
+  // and to prevent infinite loop in useEffect
+  // because this function is passed to child component
+  // and used in useEffect in child component
+  const pickLocationHandler = useCallback((location) => {
+    setLocation(location);
+  }, []);
+
+  const savePlaceHandler = () => {
+    const place = new Place(title, image, location);
+
+    onCreatePlace(place);
   };
 
   return (
@@ -23,8 +45,11 @@ const PlaceForm = () => {
           style={styles.input}
         />
       </View>
-      <ImagePicker />
-      <LocationPicker />
+      <ImagePicker onTakeImage={takeImageHandler} />
+      <LocationPicker onPickLocation={pickLocationHandler} />
+      <Button onPress={savePlaceHandler}>
+        Add Place
+      </Button>
     </ScrollView>
   );
 };

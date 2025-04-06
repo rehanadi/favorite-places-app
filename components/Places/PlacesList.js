@@ -22,7 +22,7 @@ const PlacesList = ({ places }) => {
           place={item}
         />
       )}
-      style={{ width: "100%" }}
+      style={styles.list}
       contentContainerStyle={{ padding: 10 }}
     />
   );
@@ -31,6 +31,9 @@ const PlacesList = ({ places }) => {
 export default PlacesList;
 
 const styles = StyleSheet.create({
+  list: {
+    margin: 24,
+  },
   fallbackContainer: {
     flex: 1,
     justifyContent: "center",
