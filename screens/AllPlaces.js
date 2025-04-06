@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import PlacesList from "../components/Places/PlacesList";
+import { fetchPlaces } from "../util/database";
 
 const AllPlaces = ({ route }) => {
   const [places, setPlaces] = useState([]);
   const isFocused = useIsFocused();
 
-  // when the screen is focused and the route params are available, we can use them
-  // to update the state or perform any other actions
   useEffect(() => {
-    if (isFocused && route.params) {
-      const { place } = route.params;
-      setPlaces((prevPlaces) => [...prevPlaces, place]);
+    const loadPlaces = async () => {
+      const data = await fetchPlaces();
+      setPlaces(data);
+    };
+
+    if (isFocused) {
+      loadPlaces();
     }
-  }, [isFocused, route]);
+  }, [isFocused]);
 
   return (
     <PlacesList places={places} />

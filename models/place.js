@@ -1,5 +1,5 @@
 export class Place {
-  constructor(title, imageUri, location) {
+  constructor(title, imageUri, location, id) {
     this.title = title;
     this.imageUri = imageUri;
     this.address = location.address;
@@ -7,6 +7,6 @@ export class Place {
       lat: location.lat,
       lng: location.lng,
     };
-    this.id = new Date().toString() + Math.random().toString(); // Unique ID for each place
+    this.id = id;
   }
 }
