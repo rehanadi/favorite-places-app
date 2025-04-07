@@ -65,8 +65,6 @@ export const fetchPlaces = () => {
       
       const result = await db.getAllAsync(`SELECT * FROM places`);
       
-      console.log("Fetched places:", result);
-
       const places = [];
   
       for (const row of result) {
@@ -83,6 +81,37 @@ export const fetchPlaces = () => {
       resolve(places);
     } catch (error) {
       console.log("Error fetching places: ", error);
+      reject(error);
+    }
+  });
+
+  return promise;
+};
+
+export const fetchPlaceDetails = (id) => {
+  const promise = new Promise(async (resolve, reject) => {
+    try {
+      const db = await getDatabaseConnection();
+      
+      const result = await db.getFirstAsync(
+        `SELECT * FROM places WHERE id = ?`, 
+        [id]
+      );
+      
+      if (!result) {
+        throw new Error(`Place with id ${id} not found`);
+      }
+
+      const location = {
+        address: result.address,
+        lat: result.lat,
+        lng: result.lng,
+      };
+
+      const place = new Place(result.title, result.imageUri, location, result.id);
+      resolve(place);
+    } catch (error) {
+      console.log("Error fetching place details: ", error);
       reject(error);
     }
   });
